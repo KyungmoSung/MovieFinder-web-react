@@ -7,10 +7,7 @@ class App extends Component {
   state = {};
 
   componentDidMount() {
-    fetch('https://yts.am/api/v2/list_movies.json?sort_by=rating')
-    .then(response => response.json())
-    .then(json => console.log(json))
-    .catch(err => console.log(err))
+    this._getMovies();
   }
 
   _renderMovies = () => {
@@ -19,6 +16,20 @@ class App extends Component {
     })
     return movies;
   };
+  
+  _getMovies = async () => {
+    const movies = await this._callApi()
+    this.setState({
+      movies
+    })
+  }
+
+  _callApi = () => {
+    return fetch('https://yts.am/api/v2/list_movies.json?sort_by=rating')
+    .then(response => response.json())
+    .then(json => json.data.movies)
+    .catch(err => console.log(err))
+  }
 
   render() {
     return(
