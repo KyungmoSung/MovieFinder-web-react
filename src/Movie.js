@@ -15,6 +15,15 @@ function Movie({ title, poster, genres, synopsis, rating }) {
                 <div className="Movie__Genres">
                     {genres.map((genre, index) => <MovieGenre genre={genre} key={index} />)}
                 </div>
+                <div className="Movie__Rating">
+                    <ReactStars
+                        edit={false}
+                        count={5}
+                        value={rating/2}
+                        size={20}
+                        color1={'#dddddd'}
+                        color2={'#ffd700'} />
+                </div>
                 <div className="Movie__Synopsis">
                     <LinesEllipsis
                         text={synopsis}
