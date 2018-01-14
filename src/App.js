@@ -4,7 +4,8 @@ import Movie from './Movie';
 
 class App extends Component {
 
-  state = {};
+  state = {
+  }
 
   componentDidMount() {
     this._getMovies();
@@ -12,12 +13,14 @@ class App extends Component {
 
   _renderMovies = () => {
     const movies = this.state.movies.map(movie => {
+      
       return <Movie 
       title={movie.title} 
       poster={movie.medium_cover_image} 
       genres={movie.genres} 
       synopsis={movie.synopsis}
-      
+      rating={movie.rating}
+      year={movie.year}
       key={movie.id} />
     })
     return movies;
@@ -38,12 +41,17 @@ class App extends Component {
   }
 
   render() {
+  	const { selectedOption } = this.state;
+  	const value = selectedOption && selectedOption.value;
+    const { movies } = this.state;
+    console.log(movies)
     return(
-      <div className="App">
-        {this.state.movies ? this._renderMovies() : 'Loading'}
+      <div className={movies ? "App" : "App--loading"}>
+        {movies ? this._renderMovies() : 'Loading'}
       </div>
     );
   }
 }
 
 export default App;
+ 
