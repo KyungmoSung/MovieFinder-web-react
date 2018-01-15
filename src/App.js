@@ -7,15 +7,13 @@ import 'react-select/dist/react-select.css';
 class App extends Component {
 
   state = {
-    selectedOption: '',
   }
   handleChange = (selectedOption) => {
     this.setState({ 
       selectedOption,
       movies: null,
      });
-    console.log(`Selected: ${selectedOption.label}`);
-    this._getMovies(selectedOption.value);
+    this._getMovies(selectedOption ? selectedOption.value : 'rating');
   }
 
   componentDidMount() {
