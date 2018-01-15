@@ -8,6 +8,7 @@ class App extends Component {
 
   state = {
   }
+  
   handleChange = (selectedOption) => {
     this.setState({ 
       selectedOption,
