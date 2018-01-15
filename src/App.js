@@ -1,19 +1,29 @@
 import React, { Component } from 'react';
 import './App.css';
 import Movie from './Movie';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 
 class App extends Component {
 
   state = {
+    selectedOption: '',
+  }
+  handleChange = (selectedOption) => {
+    this.setState({ 
+      selectedOption,
+      movies: null,
+     });
+    console.log(`Selected: ${selectedOption.label}`);
+    this._getMovies(selectedOption.value);
   }
 
   componentDidMount() {
-    this._getMovies();
+    this._getMovies('rating');
   }
 
   _renderMovies = () => {
     const movies = this.state.movies.map(movie => {
-      
       return <Movie 
       title={movie.title} 
       poster={movie.medium_cover_image} 
@@ -25,29 +35,53 @@ class App extends Component {
     })
     return movies;
   };
+
+  _renderSort = () => {
+  	const { selectedOption } = this.state;
+    const value = selectedOption && selectedOption.value;
+    
+    return <Select
+    name="form-field-name"
+    value={value}
+    onChange={this.handleChange}
+    options={[
+    { value: 'rating', label: 'rating' },
+    { value: 'download_count', label: 'download_count' },
+    { value: 'like_count', label: 'like_count' },
+    { value: 'date_added', label: 'date_added' },
+    { value: 'title', label: 'title' },
+    { value: 'year', label: 'year' },
+    ]}
+    />
+
+  }
   
-  _getMovies = async () => {
-    const movies = await this._callApi()
+  _getMovies = async (sort) => {
+    const movies = await this._callApi(sort)
     this.setState({
       movies
     })
   }
 
-  _callApi = () => {
-    return fetch('https://yts.am/api/v2/list_movies.json?sort_by=rating')
+  _callApi = (sort) => {
+    console.log(sort)
+    return fetch('https://yts.am/api/v2/list_movies.json?sort_by='+ sort)
     .then(response => response.json())
     .then(json => json.data.movies)
     .catch(err => console.log(err))
   }
 
   render() {
-  	const { selectedOption } = this.state;
-  	const value = selectedOption && selectedOption.value;
     const { movies } = this.state;
     console.log(movies)
     return(
       <div className={movies ? "App" : "App--loading"}>
-        {movies ? this._renderMovies() : 'Loading'}
+        <div className="Search__Column">
+          {movies ? this._renderSort() : ''}
+        </div>
+        <div className="Result__Column">
+          {movies ? this._renderMovies() : 'Loading'}
+        </div>
       </div>
     );
   }
